@@ -1,7 +1,7 @@
 const initialValues = {
   user: null,
   room: null,
-  socket: new WebSocket('ws://lit-dawn-13539.herokuapp.com'), // ws://localhost:5001/
+  socket: new WebSocket('wss://lit-dawn-13539.herokuapp.com'), // wss://localhost:5001/
 };
 
 export const roomReducer = (state = initialValues, action) => {
