@@ -70,7 +70,7 @@ const LobbyPage = (props) => {
           <div className={classes.title}>Share Link</div>
           <div className={classes.subTitle}>Click!</div>
           <TelegramShareButton
-            url={`${appConfig.API_URL}/lobbyPage/${getRoomIdFromLS()}/`}
+            url={`${window.location.origin}/lobbyPage/${getRoomIdFromLS()}/`}
           >
             <TelegramIcon size={256} round={true} className={classes.tgIcon} />
           </TelegramShareButton>

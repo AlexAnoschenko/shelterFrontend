@@ -25,8 +25,8 @@ const AppRouter = () => {
   const socket = getWebSocket();
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     dispatch(addSocketAction(socket));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   return (
