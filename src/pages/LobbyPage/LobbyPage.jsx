@@ -3,7 +3,6 @@ import { TelegramShareButton, TelegramIcon } from 'react-share';
 
 import Loader from '../../components/Loader/Loader';
 import UsersLoader from '../../components/UsersLoader/UsersLoader';
-import appConfig from '../../config';
 import NewUserPage from '../NewUserPage/NewUserPage';
 import { useLobbyPage } from './hooks';
 
