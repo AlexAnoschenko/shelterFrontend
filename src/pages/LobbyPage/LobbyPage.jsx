@@ -3,6 +3,7 @@ import { TelegramShareButton, TelegramIcon } from 'react-share';
 
 import Loader from '../../components/Loader/Loader';
 import UsersLoader from '../../components/UsersLoader/UsersLoader';
+import appConfig from '../../config';
 import NewUserPage from '../NewUserPage/NewUserPage';
 import { useLobbyPage } from './hooks';
 
@@ -69,7 +70,7 @@ const LobbyPage = (props) => {
           <div className={classes.title}>Share Link</div>
           <div className={classes.subTitle}>Click!</div>
           <TelegramShareButton
-            url={`http://localhost:3000/lobbyPage/${getRoomIdFromLS()}`}
+            url={`${appConfig.API_URL}/lobbyPage/${getRoomIdFromLS()}/`}
           >
             <TelegramIcon size={256} round={true} className={classes.tgIcon} />
           </TelegramShareButton>

@@ -11,3 +11,8 @@ export const addUserAction = (payload) => ({
   type: 'ADD_USER',
   payload,
 });
+
+export const addSocketAction = (payload) => ({
+  type: 'ADD_SOCKET',
+  payload,
+});

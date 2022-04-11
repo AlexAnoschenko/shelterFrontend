@@ -1,7 +1,7 @@
 const initialValues = {
   user: null,
   room: null,
-  socket: new WebSocket('wss://lit-dawn-13539.herokuapp.com'), // wss://localhost:5001/
+  socket: null, // new WebSocket('wss://lit-dawn-13539.herokuapp.com'), // ws://localhost:5001 || wss://lit-dawn-13539.herokuapp.com
 };
 
 export const roomReducer = (state = initialValues, action) => {
@@ -11,6 +11,11 @@ export const roomReducer = (state = initialValues, action) => {
 
     case 'ADD_USER':
       return { ...state, user: action.payload };
+
+    case 'ADD_SOCKET': {
+      console.log(action);
+      return { ...state, socket: action.payload };
+    }
 
     default:
       return state;
