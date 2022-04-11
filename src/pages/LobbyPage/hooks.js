@@ -50,7 +50,7 @@ export const useLobbyPage = (props) => {
   }, [room]);
 
   useEffect(() => {
-    if (socket.readyState === 1) {
+    if (socket?.readyState === 1) {
       socket.send(
         JSON.stringify({
           method: 'connection',
@@ -60,14 +60,17 @@ export const useLobbyPage = (props) => {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket.readyState]);
+  }, [socket?.readyState]);
 
   useEffect(() => {
-    socket.onmessage = (event) => {
-      if (JSON.parse(event.data).users) {
-        addRoomStore(JSON.parse(event.data));
-      }
-    };
+    if (socket) {
+      socket.onmessage = (event) => {
+        if (JSON.parse(event.data).users) {
+          addRoomStore(JSON.parse(event.data));
+        }
+      };
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 

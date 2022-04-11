@@ -13,7 +13,6 @@ export const roomReducer = (state = initialValues, action) => {
       return { ...state, user: action.payload };
 
     case 'ADD_SOCKET': {
-      console.log(action);
       return { ...state, socket: action.payload };
     }
 
