@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ export const useLobbyPage = (props) => {
   const router = useHistory();
   const { room, socket } = useSelector((state) => state.room);
   const nickname = localStorage.getItem('nickname');
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const updateStoreRoom = () => {
     socket.send(
@@ -24,6 +25,29 @@ export const useLobbyPage = (props) => {
         },
       })
     );
+  };
+
+  const isUserExists = () => {
+    room?.users.forEach((user) => {
+      if (user.nickname === nickname) {
+        return true;
+      }
+      return false;
+    });
+  };
+
+  const exitGame = () => {
+    localStorage.clear();
+    router.push('/');
+    window.location.reload();
+  };
+
+  const openModal = () => {
+    setIsOpenModal(true);
+  };
+
+  const closeModal = () => {
+    setIsOpenModal(false);
   };
 
   const getRoomIdFromLS = () => {
@@ -97,5 +121,10 @@ export const useLobbyPage = (props) => {
     updateStoreRoom,
     getRoomIdFromLS,
     clearLS,
+    exitGame,
+    isOpenModal,
+    openModal,
+    closeModal,
+    isUserExists,
   };
 };
