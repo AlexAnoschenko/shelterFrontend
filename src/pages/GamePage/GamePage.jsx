@@ -16,7 +16,6 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     gap: 18,
     padding: 10,
-    height: '100vh',
   },
   label: {
     fontSize: '28px',
@@ -27,6 +26,9 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 10,
+  },
+  exitButton: {
+    marginBottom: '10px',
   },
 }));
 
@@ -39,6 +41,7 @@ const GamePage = (props) => {
     currentPlayer,
     setCurrentPlayer,
     openCard,
+    openSpecialCard,
     exitGame,
     isOpenModal,
     openModal,
@@ -73,6 +76,24 @@ const GamePage = (props) => {
                 return null;
               })}
             </div>
+            <div className={classes.label}>Special Conditions</div>
+            <div className={classes.cardsList}>
+              {room.users.map((usr) => {
+                if (usr.nickname === currentPlayer) {
+                  return usr.specialConditionCards.map((card) => {
+                    return (
+                      <CardItem
+                        key={card.id}
+                        card={card}
+                        currentPlayer={currentPlayer}
+                        openCard={openSpecialCard}
+                      />
+                    );
+                  });
+                }
+                return null;
+              })}
+            </div>
             <PlayerSwicher
               currentPlayer={currentPlayer}
               setCurrentPlayer={setCurrentPlayer}
@@ -80,7 +101,11 @@ const GamePage = (props) => {
             />
             <ShelterInfo room={room} />
             <ApocalypseInfo room={room} />
-            <CustomButton textButton='Exit Game' onClickHandler={openModal} />
+            <CustomButton
+              className={classes.exitButton}
+              textButton='Exit Game'
+              onClickHandler={openModal}
+            />
           </>
         ) : (
           <UsersLoader />

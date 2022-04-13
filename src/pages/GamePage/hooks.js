@@ -28,6 +28,38 @@ export const useGamePage = (props) => {
     );
   };
 
+  const openSpecialCard = (card) => {
+    switch (card.action) {
+      // case 'exchange':
+      //   socket.send(
+      //     JSON.stringify({
+      //       method: 'openSpecialExchangeCard',
+      //       id: room._id,
+      //       user: {
+      //         userId: localStorage.getItem('userId'),
+      //         nickname: localStorage.getItem('nickname'),
+      //         card: card,
+      //       },
+      //     })
+      //   );
+      //   break;
+
+      case 'shuffle':
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialShuffleCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+          })
+        );
+        break;
+    }
+  };
+
   const exitGame = () => {
     localStorage.clear();
     router.push('/');
@@ -98,6 +130,7 @@ export const useGamePage = (props) => {
     currentPlayer,
     setCurrentPlayer,
     openCard,
+    openSpecialCard,
     exitGame,
     isOpenModal,
     openModal,

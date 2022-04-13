@@ -13,8 +13,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     textAlign: 'center',
     gap: 18,
-    backgroundColor: (props) =>
-      props.isVisible ? '#016b2a' : '#3b3b3b',
+    backgroundColor: (props) => (props.isVisible ? '#016b2a' : '#3b3b3b'),
     padding: '10px',
     border: '2px solid black',
     borderRadius: '10px',
@@ -51,10 +50,13 @@ const CardItem = ({ card, currentPlayer, openCard }) => {
       />
 
       <div className={classes.main} onClick={handleClickOpen}>
-        <div>{card.type.toUpperCase()}</div>
         <div>
-          {currentPlayer === localStorage.getItem('nickname') ||
-          card.isVisible
+          {card.type !== 'specialConditions'
+            ? card.type.toUpperCase()
+            : 'Special'}
+        </div>
+        <div>
+          {currentPlayer === localStorage.getItem('nickname') || card.isVisible
             ? card.description
             : '???'}
         </div>

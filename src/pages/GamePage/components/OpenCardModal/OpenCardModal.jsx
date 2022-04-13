@@ -24,12 +24,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const OpenCardModal = ({
-  isOpenCardModal,
-  handleClose,
-  card,
-  openCard,
-}) => {
+const OpenCardModal = ({ isOpenCardModal, handleClose, card, openCard }) => {
   const classes = useStyles();
 
   const openCardHandle = (card) => {
@@ -54,7 +49,11 @@ const OpenCardModal = ({
         Are you sure you want to open this card?
       </DialogTitle>
       {card && (
-        <div className={classes.cardTypeText}>{card.type}</div>
+        <div className={classes.cardTypeText}>
+          {card.type !== 'specialConditions'
+            ? card.type.toUpperCase()
+            : 'SPECIAL CONDITIONS'}
+        </div>
       )}
       <div className={classes.buttonsBlock}>
         <Button
