@@ -6,6 +6,7 @@ import ApocalypseInfo from './components/ApocalypseInfo/ApocalypseInfo';
 import CardItem from './components/CardItem/CardItem';
 import PlayerSwicher from './components/PlayerSwicher/PlayerSwicher';
 import ShelterInfo from './components/ShelterInfo/ShelterInfo';
+import UsersLoader from '../../components/UsersLoader/UsersLoader';
 import { useGamePage } from './hooks';
 
 const useStyles = makeStyles(() => ({
@@ -15,6 +16,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     gap: 18,
     padding: 10,
+    height: '100vh',
   },
   label: {
     fontSize: '28px',
@@ -51,7 +53,7 @@ const GamePage = (props) => {
         exitGame={exitGame}
       />
       <div className={classes.main}>
-        {user && room && (
+        {user && room && room.shelter && room.apocalypse ? (
           <>
             <div className={classes.label}>{currentPlayer}</div>
             <div className={classes.cardsList}>
@@ -78,9 +80,11 @@ const GamePage = (props) => {
             />
             <ShelterInfo room={room} />
             <ApocalypseInfo room={room} />
+            <CustomButton textButton='Exit Game' onClickHandler={openModal} />
           </>
+        ) : (
+          <UsersLoader />
         )}
-        <CustomButton textButton='Exit Game' onClickHandler={openModal} />
       </div>
     </>
   );
