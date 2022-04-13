@@ -72,6 +72,7 @@ export const useLobbyPage = (props) => {
 
   useEffect(() => {
     isUserExistsCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [room]);
 
   useEffect(() => {
