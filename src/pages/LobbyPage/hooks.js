@@ -10,7 +10,9 @@ export const useLobbyPage = (props) => {
   const router = useHistory();
   const { room, socket } = useSelector((state) => state.room);
   const nickname = localStorage.getItem('nickname');
+  const userId = localStorage.getItem('userId');
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isUserExists, setIsUserExists] = useState(null);
 
   const updateStoreRoom = () => {
     socket.send(
@@ -27,11 +29,13 @@ export const useLobbyPage = (props) => {
     );
   };
 
-  const isUserExists = () => {
+  const isUserExistsCheck = () => {
     room?.users.forEach((user) => {
-      if (user.nickname === nickname) {
+      if (user.userId === userId) {
+        setIsUserExists(true);
         return true;
       }
+      setIsUserExists(false);
       return false;
     });
   };
@@ -65,6 +69,10 @@ export const useLobbyPage = (props) => {
   const clearLS = () => {
     localStorage.clear();
   };
+
+  useEffect(() => {
+    isUserExistsCheck();
+  }, [room]);
 
   useEffect(() => {
     if (room && room.users.length === room.numberOfPlayers) {

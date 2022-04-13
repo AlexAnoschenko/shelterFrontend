@@ -83,7 +83,7 @@ const LobbyPage = (props) => {
       <div className={classes.main}>
         <button onClick={clearLS}>Clear LS</button>
 
-        {nickname && isUserExists() ? (
+        {nickname && isUserExists ? (
           <>
             <div className={classes.title}>Share Link</div>
             <div className={classes.subTitle}>Click!</div>
