@@ -8,6 +8,7 @@ import CustomTextField from '../../components/TextField/TextField';
 import { CreateUserSchema } from './validators';
 import { createUser } from '../../api/room';
 import { addUserAction } from '../../store/actions/roomActions';
+import UsersLoader from '../../components/UsersLoader/UsersLoader';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles(() => ({
 
 const NewUserPage = ({ updateStoreRoom }) => {
   const classes = useStyles();
-  const { socket } = useSelector((state) => state.room);
+  const { socket, room } = useSelector((state) => state.room);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -64,24 +65,28 @@ const NewUserPage = ({ updateStoreRoom }) => {
   });
 
   return (
-    <form className={classes.main} onSubmit={formik.handleSubmit}>
-      {formik.errors.nickname ? (
-        <div className={classes.error}>Required fields!</div>
-      ) : null}
+    <>
+      {room ? (
+        <form className={classes.main} onSubmit={formik.handleSubmit}>
+          {formik.errors.nickname ? (
+            <div className={classes.error}>Required fields!</div>
+          ) : null}
 
-      <CustomTextField
-        id='nickname'
-        name='nickname'
-        value={formik.values.nickname}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.nickname && Boolean(formik.errors.nickname)
-        }
-        label='Enter your Nickname...'
-      />
+          <CustomTextField
+            id='nickname'
+            name='nickname'
+            value={formik.values.nickname}
+            onChange={formik.handleChange}
+            error={formik.touched.nickname && Boolean(formik.errors.nickname)}
+            label='Enter your Nickname...'
+          />
 
-      <CustomButton type='submit' textButton='Ready!' height='62px' />
-    </form>
+          <CustomButton type='submit' textButton='Ready!' height='62px' />
+        </form>
+      ) : (
+        <UsersLoader />
+      )}
+    </>
   );
 };
 

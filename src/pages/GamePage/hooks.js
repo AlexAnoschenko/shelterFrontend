@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { getRoom } from '../../api/room';
 import { addRoomAction, addUserAction } from '../../store/actions/roomActions';
 
 export const useGamePage = (props) => {
+  const router = useHistory();
   const dispatch = useDispatch();
   const { user, room, socket } = useSelector((state) => state.room);
   const [currentPlayer, setCurrentPlayer] = useState(
     localStorage.getItem('nickname')
   );
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const openCard = (card) => {
     socket.send(
@@ -23,6 +26,20 @@ export const useGamePage = (props) => {
         },
       })
     );
+  };
+
+  const exitGame = () => {
+    localStorage.clear();
+    router.push('/');
+    window.location.reload();
+  };
+
+  const openModal = () => {
+    setIsOpenModal(true);
+  };
+
+  const closeModal = () => {
+    setIsOpenModal(false);
   };
 
   const addRoomStore = async (res) => {
@@ -81,5 +98,9 @@ export const useGamePage = (props) => {
     currentPlayer,
     setCurrentPlayer,
     openCard,
+    exitGame,
+    isOpenModal,
+    openModal,
+    closeModal,
   };
 };

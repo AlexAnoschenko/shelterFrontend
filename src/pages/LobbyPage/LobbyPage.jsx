@@ -1,9 +1,10 @@
 import { makeStyles } from '@mui/styles';
 import { TelegramShareButton, TelegramIcon } from 'react-share';
 
+import CustomButton from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
+import Modal from '../../components/Modal/Modal';
 import UsersLoader from '../../components/UsersLoader/UsersLoader';
-import appConfig from '../../config';
 import NewUserPage from '../NewUserPage/NewUserPage';
 import { useLobbyPage } from './hooks';
 
@@ -58,51 +59,74 @@ const useStyles = makeStyles(() => ({
 
 const LobbyPage = (props) => {
   const classes = useStyles();
-  const { room, nickname, updateStoreRoom, getRoomIdFromLS, clearLS } =
-    useLobbyPage(props);
+
+  const {
+    room,
+    nickname,
+    updateStoreRoom,
+    getRoomIdFromLS,
+    clearLS,
+    exitGame,
+    isOpenModal,
+    openModal,
+    closeModal,
+    isUserExists,
+  } = useLobbyPage(props);
 
   return (
-    <div className={classes.main}>
-      <button onClick={clearLS}>Clear LS</button>
+    <>
+      <Modal
+        isOpenModal={isOpenModal}
+        handleClose={closeModal}
+        exitGame={exitGame}
+      />
+      <div className={classes.main}>
+        <button onClick={clearLS}>Clear LS</button>
 
-      {nickname ? (
-        <>
-          <div className={classes.title}>Share Link</div>
-          <div className={classes.subTitle}>Click!</div>
-          <TelegramShareButton
-            url={`${window.location.origin}/lobbyPage/${getRoomIdFromLS()}/`}
-          >
-            <TelegramIcon size={256} round={true} className={classes.tgIcon} />
-          </TelegramShareButton>
-          <Loader />
-          {room ? (
-            <div>
-              <div
-                className={classes.title}
-              >{`${room.users.length} from ${room.numberOfPlayers} joined`}</div>
-              <div className={classes.users}>
-                {room.users.map((user) => (
-                  <div
-                    style={{
-                      color: `#${Math.floor(Math.random() * 16777215).toString(
-                        16
-                      )}`,
-                    }}
-                    key={user.userId}
-                  >
-                    {user.nickname}
-                  </div>
-                ))}
+        {nickname && isUserExists ? (
+          <>
+            <div className={classes.title}>Share Link</div>
+            <div className={classes.subTitle}>Click!</div>
+            <TelegramShareButton
+              url={`${window.location.origin}/lobbyPage/${getRoomIdFromLS()}/`}
+            >
+              <TelegramIcon
+                size={256}
+                round={true}
+                className={classes.tgIcon}
+              />
+            </TelegramShareButton>
+            <Loader />
+            {room ? (
+              <div>
+                <div
+                  className={classes.title}
+                >{`${room.users.length} from ${room.numberOfPlayers} joined`}</div>
+                <div className={classes.users}>
+                  {room.users.map((user) => (
+                    <div
+                      style={{
+                        color: `#${Math.floor(
+                          Math.random() * 16777215
+                        ).toString(16)}`,
+                      }}
+                      key={user.userId}
+                    >
+                      {user.nickname}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : (
-            <UsersLoader />
-          )}
-        </>
-      ) : (
-        <NewUserPage updateStoreRoom={updateStoreRoom} />
-      )}
-    </div>
+            ) : (
+              <UsersLoader />
+            )}
+            <CustomButton textButton='Exit Game' onClickHandler={openModal} />
+          </>
+        ) : (
+          <NewUserPage updateStoreRoom={updateStoreRoom} />
+        )}
+      </div>
+    </>
   );
 };
 

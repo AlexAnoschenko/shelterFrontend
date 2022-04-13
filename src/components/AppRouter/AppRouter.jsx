@@ -5,6 +5,7 @@ import useWebSocket from 'react-use-websocket';
 
 import { Routes } from '../../routes';
 import { addSocketAction } from '../../store/actions/roomActions';
+import appConfig from '../../config';
 
 const AppRouter = () => {
   const [socketState, setSocketState] = useState(false);
@@ -16,7 +17,7 @@ const AppRouter = () => {
     false
   );
 
-  const { getWebSocket } = useWebSocket('wss://lit-dawn-13539.herokuapp.com', {
+  const { getWebSocket } = useWebSocket(`${appConfig.SOCKET_URL}`, {
     shouldReconnect: () => socketState || true,
     reconnectAttempts: 10,
     reconnectInterval: 1000,
