@@ -25,7 +25,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CardItem = ({ card, currentPlayer, openCard }) => {
+const CardItem = ({
+  card,
+  currentPlayer,
+  openCard,
+  type,
+  selectedPlayer,
+  setSelectedPlayer,
+  users,
+}) => {
   const classes = useStyles({
     isVisible: card.isVisible,
     currentPlayer,
@@ -33,6 +41,9 @@ const CardItem = ({ card, currentPlayer, openCard }) => {
   const [isOpenCardModal, setIsOpenCardModal] = useState(false);
 
   const handleClickOpen = () => {
+    if (card.action === 'exchange') {
+      setSelectedPlayer(null);
+    }
     setIsOpenCardModal(true);
   };
 
@@ -47,6 +58,10 @@ const CardItem = ({ card, currentPlayer, openCard }) => {
         handleClose={handleClose}
         card={card}
         openCard={openCard}
+        type={type}
+        selectedPlayer={selectedPlayer}
+        setSelectedPlayer={setSelectedPlayer}
+        users={users}
       />
 
       <div className={classes.main} onClick={handleClickOpen}>

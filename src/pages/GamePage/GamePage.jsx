@@ -46,6 +46,8 @@ const GamePage = (props) => {
     isOpenModal,
     openModal,
     closeModal,
+    selectedPlayer,
+    setSelectedPlayer,
   } = useGamePage(props);
 
   return (
@@ -87,6 +89,10 @@ const GamePage = (props) => {
                         card={card}
                         currentPlayer={currentPlayer}
                         openCard={openSpecialCard}
+                        type={card.action}
+                        selectedPlayer={selectedPlayer}
+                        setSelectedPlayer={setSelectedPlayer}
+                        users={room.users}
                       />
                     );
                   });

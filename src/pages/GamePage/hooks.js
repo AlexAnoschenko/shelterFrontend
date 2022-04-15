@@ -13,6 +13,7 @@ export const useGamePage = (props) => {
     localStorage.getItem('nickname')
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const openCard = (card) => {
     socket.send(
@@ -30,19 +31,28 @@ export const useGamePage = (props) => {
 
   const openSpecialCard = (card) => {
     switch (card.action) {
-      // case 'exchange':
-      //   socket.send(
-      //     JSON.stringify({
-      //       method: 'openSpecialExchangeCard',
-      //       id: room._id,
-      //       user: {
-      //         userId: localStorage.getItem('userId'),
-      //         nickname: localStorage.getItem('nickname'),
-      //         card: card,
-      //       },
-      //     })
-      //   );
-      //   break;
+      case 'exchange':
+        let selectedUser = null;
+
+        room.users.forEach((user) => {
+          if (user.nickname === selectedPlayer) {
+            selectedUser = user;
+          }
+        });
+
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialExchangeCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+            selectedUser: selectedUser,
+          })
+        );
+        break;
 
       case 'shuffle':
         socket.send(
@@ -135,5 +145,7 @@ export const useGamePage = (props) => {
     isOpenModal,
     openModal,
     closeModal,
+    selectedPlayer,
+    setSelectedPlayer,
   };
 };
