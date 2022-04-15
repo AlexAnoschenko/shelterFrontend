@@ -89,7 +89,7 @@ const OpenCardModal = ({
             : 'SPECIAL CONDITIONS'}
         </div>
       )}
-      {type === 'exchange' && (
+      {(type === 'exchange' || type === 'opening') && (
         <div>
           <div className={classes.subTitle}>Choose a player</div>
           <div className={classes.playersBlock}>
@@ -122,7 +122,10 @@ const OpenCardModal = ({
           onClick={handleClose}
           textButton={'Yes'}
           onClickHandler={() => openCardHandle(card)}
-          disabled={card.action === 'exchange' && !selectedPlayer}
+          disabled={
+            (card.action === 'exchange' || card.action === 'opening') &&
+            !selectedPlayer
+          }
         />
         <Button
           width={140}

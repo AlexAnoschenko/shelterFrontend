@@ -30,19 +30,34 @@ export const useGamePage = (props) => {
   };
 
   const openSpecialCard = (card) => {
+    let selectedUser = null;
+
+    room.users.forEach((user) => {
+      if (user.nickname === selectedPlayer) {
+        selectedUser = user;
+      }
+    });
+
     switch (card.action) {
       case 'exchange':
-        let selectedUser = null;
-
-        room.users.forEach((user) => {
-          if (user.nickname === selectedPlayer) {
-            selectedUser = user;
-          }
-        });
-
         socket.send(
           JSON.stringify({
             method: 'openSpecialExchangeCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+            selectedUser: selectedUser,
+          })
+        );
+        break;
+
+      case 'opening':
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialOpeningCard',
             id: room._id,
             user: {
               userId: localStorage.getItem('userId'),

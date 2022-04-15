@@ -41,7 +41,7 @@ const CardItem = ({
   const [isOpenCardModal, setIsOpenCardModal] = useState(false);
 
   const handleClickOpen = () => {
-    if (card.action === 'exchange') {
+    if (card.action === 'exchange' || 'opening') {
       setSelectedPlayer(null);
     }
     setIsOpenCardModal(true);
