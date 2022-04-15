@@ -44,6 +44,7 @@ const NewUserPage = ({ updateStoreRoom }) => {
         role: 'player',
         nickname: res.data.user.nickname,
         cards: [],
+        specialConditionCards: [],
       })
     );
   };

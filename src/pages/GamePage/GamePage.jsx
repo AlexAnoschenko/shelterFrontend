@@ -6,6 +6,7 @@ import ApocalypseInfo from './components/ApocalypseInfo/ApocalypseInfo';
 import CardItem from './components/CardItem/CardItem';
 import PlayerSwicher from './components/PlayerSwicher/PlayerSwicher';
 import ShelterInfo from './components/ShelterInfo/ShelterInfo';
+import UsersLoader from '../../components/UsersLoader/UsersLoader';
 import { useGamePage } from './hooks';
 
 const useStyles = makeStyles(() => ({
@@ -26,6 +27,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     gap: 10,
   },
+  exitButton: {
+    marginBottom: '10px',
+  },
 }));
 
 const GamePage = (props) => {
@@ -37,10 +41,13 @@ const GamePage = (props) => {
     currentPlayer,
     setCurrentPlayer,
     openCard,
+    openSpecialCard,
     exitGame,
     isOpenModal,
     openModal,
     closeModal,
+    selectedPlayer,
+    setSelectedPlayer,
   } = useGamePage(props);
 
   return (
@@ -51,7 +58,7 @@ const GamePage = (props) => {
         exitGame={exitGame}
       />
       <div className={classes.main}>
-        {user && room && (
+        {user && room && room.shelter && room.apocalypse ? (
           <>
             <div className={classes.label}>{currentPlayer}</div>
             <div className={classes.cardsList}>
@@ -71,6 +78,28 @@ const GamePage = (props) => {
                 return null;
               })}
             </div>
+            <div className={classes.label}>Special Conditions</div>
+            <div className={classes.cardsList}>
+              {room.users.map((usr) => {
+                if (usr.nickname === currentPlayer) {
+                  return usr.specialConditionCards.map((card) => {
+                    return (
+                      <CardItem
+                        key={card.id}
+                        card={card}
+                        currentPlayer={currentPlayer}
+                        openCard={openSpecialCard}
+                        type={card.action}
+                        selectedPlayer={selectedPlayer}
+                        setSelectedPlayer={setSelectedPlayer}
+                        users={room.users}
+                      />
+                    );
+                  });
+                }
+                return null;
+              })}
+            </div>
             <PlayerSwicher
               currentPlayer={currentPlayer}
               setCurrentPlayer={setCurrentPlayer}
@@ -78,9 +107,15 @@ const GamePage = (props) => {
             />
             <ShelterInfo room={room} />
             <ApocalypseInfo room={room} />
+            <CustomButton
+              className={classes.exitButton}
+              textButton='Exit Game'
+              onClickHandler={openModal}
+            />
           </>
+        ) : (
+          <UsersLoader />
         )}
-        <CustomButton textButton='Exit Game' onClickHandler={openModal} />
       </div>
     </>
   );

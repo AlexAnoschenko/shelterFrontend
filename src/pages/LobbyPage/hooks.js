@@ -24,6 +24,7 @@ export const useLobbyPage = (props) => {
           role: 'player',
           nickname: localStorage.getItem('nickname'),
           cards: [],
+          specialConditionCards: [],
         },
       })
     );

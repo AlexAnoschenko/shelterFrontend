@@ -13,6 +13,7 @@ export const useGamePage = (props) => {
     localStorage.getItem('nickname')
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const openCard = (card) => {
     socket.send(
@@ -26,6 +27,62 @@ export const useGamePage = (props) => {
         },
       })
     );
+  };
+
+  const openSpecialCard = (card) => {
+    let selectedUser = null;
+
+    room.users.forEach((user) => {
+      if (user.nickname === selectedPlayer) {
+        selectedUser = user;
+      }
+    });
+
+    switch (card.action) {
+      case 'exchange':
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialExchangeCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+            selectedUser: selectedUser,
+          })
+        );
+        break;
+
+      case 'opening':
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialOpeningCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+            selectedUser: selectedUser,
+          })
+        );
+        break;
+
+      case 'shuffle':
+        socket.send(
+          JSON.stringify({
+            method: 'openSpecialShuffleCard',
+            id: room._id,
+            user: {
+              userId: localStorage.getItem('userId'),
+              nickname: localStorage.getItem('nickname'),
+              card: card,
+            },
+          })
+        );
+        break;
+    }
   };
 
   const exitGame = () => {
@@ -98,9 +155,12 @@ export const useGamePage = (props) => {
     currentPlayer,
     setCurrentPlayer,
     openCard,
+    openSpecialCard,
     exitGame,
     isOpenModal,
     openModal,
     closeModal,
+    selectedPlayer,
+    setSelectedPlayer,
   };
 };
