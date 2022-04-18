@@ -8,6 +8,7 @@ import PlayerSwicher from './components/PlayerSwicher/PlayerSwicher';
 import ShelterInfo from './components/ShelterInfo/ShelterInfo';
 import UsersLoader from '../../components/UsersLoader/UsersLoader';
 import { useGamePage } from './hooks';
+import CustomizedSnackbars from '../../components/Snackbar/Snackbar';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -48,6 +49,9 @@ const GamePage = (props) => {
     closeModal,
     selectedPlayer,
     setSelectedPlayer,
+    openSnackbar,
+    handleCloseSnackbar,
+    snackbarMessage,
   } = useGamePage(props);
 
   return (
@@ -117,6 +121,12 @@ const GamePage = (props) => {
           <UsersLoader />
         )}
       </div>
+
+      <CustomizedSnackbars
+        open={openSnackbar}
+        handleClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </>
   );
 };
