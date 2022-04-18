@@ -158,7 +158,7 @@ export const useGamePage = (props) => {
           addRoomStore(JSON.parse(event.data).room);
           if (JSON.parse(event.data).method === 'snackbar') {
             setSnackbarMessage(JSON.parse(event.data).snackbar);
-            setOpenSnackbar(true);
+            handleOpenSnackbar();
           }
         }
       };
