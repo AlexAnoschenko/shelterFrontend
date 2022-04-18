@@ -14,6 +14,20 @@ export const useGamePage = (props) => {
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState(null);
+
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   const openCard = (card) => {
     socket.send(
@@ -140,8 +154,12 @@ export const useGamePage = (props) => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
-        if (JSON.parse(event.data).users) {
-          addRoomStore(JSON.parse(event.data));
+        if (JSON.parse(event.data).room?.users) {
+          addRoomStore(JSON.parse(event.data).room);
+          if (JSON.parse(event.data).method === 'snackbar') {
+            setSnackbarMessage(JSON.parse(event.data).snackbar);
+            setOpenSnackbar(true);
+          }
         }
       };
     }
@@ -162,5 +180,8 @@ export const useGamePage = (props) => {
     closeModal,
     selectedPlayer,
     setSelectedPlayer,
+    openSnackbar,
+    handleCloseSnackbar,
+    snackbarMessage,
   };
 };

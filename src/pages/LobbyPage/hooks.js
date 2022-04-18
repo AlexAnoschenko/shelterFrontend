@@ -99,8 +99,8 @@ export const useLobbyPage = (props) => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
-        if (JSON.parse(event.data).users) {
-          addRoomStore(JSON.parse(event.data));
+        if (JSON.parse(event.data).room?.users) {
+          addRoomStore(JSON.parse(event.data).room);
         }
       };
     }
