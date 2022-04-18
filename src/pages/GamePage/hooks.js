@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { getRoom } from '../../api/room';
+import { getRoom, voteUser } from '../../api/room';
 import { addRoomAction, addUserAction } from '../../store/actions/roomActions';
 
 export const useGamePage = (props) => {
@@ -14,8 +14,22 @@ export const useGamePage = (props) => {
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isOpenSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(null);
+  const [isOpenVotingModal, setIsOpenVotingModal] = useState(false);
+  const [timer, setTimer] = useState(20);
+  const [isActiveTimer, setIsActiveTimer] = useState(false);
+  const [votedPlayer, setVotedPlayer] = useState(null);
+  const [isVoted, setIsVoted] = useState(false);
+
+  const startTimer = () => {
+    setIsActiveTimer(true);
+  };
+
+  const resetTimer = () => {
+    setTimer(10);
+    setIsActiveTimer(false);
+  };
 
   const handleOpenSnackbar = () => {
     setOpenSnackbar(true);
@@ -27,6 +41,31 @@ export const useGamePage = (props) => {
     }
 
     setOpenSnackbar(false);
+  };
+
+  const votePlayer = async (user) => {
+    const res = await voteUser(user);
+    if (res.data.isVoted) {
+      setIsVoted(true);
+    }
+  };
+
+  const openVotingModalAll = () => {
+    socket.send(
+      JSON.stringify({
+        method: 'openVotingModalAll',
+        id: room._id,
+      })
+    );
+  };
+
+  const getVotingResult = () => {
+    socket.send(
+      JSON.stringify({
+        method: 'getVotingResult',
+        id: room._id,
+      })
+    );
   };
 
   const openCard = (card) => {
@@ -113,6 +152,15 @@ export const useGamePage = (props) => {
     setIsOpenModal(false);
   };
 
+  const openVotingModal = () => {
+    startTimer();
+    setIsOpenVotingModal(true);
+  };
+
+  const closeVotingModal = () => {
+    setIsOpenVotingModal(false);
+  };
+
   const addRoomStore = async (res) => {
     dispatch(addRoomAction(res));
   };
@@ -120,6 +168,21 @@ export const useGamePage = (props) => {
   const addUserStore = async (res) => {
     dispatch(addUserAction(res));
   };
+
+  useEffect(() => {
+    let interval = null;
+    if (isActiveTimer && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((timer) => timer - 1);
+      }, 1000);
+    }
+
+    if (timer === 0) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isActiveTimer, timer]);
 
   useEffect(() => {
     async function fetchData() {
@@ -154,6 +217,10 @@ export const useGamePage = (props) => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
+        if (JSON.parse(event.data).method === 'openVotingModalAll') {
+          openVotingModal();
+        }
+
         if (JSON.parse(event.data).room?.users) {
           addRoomStore(JSON.parse(event.data).room);
           if (JSON.parse(event.data).method === 'snackbar') {
@@ -180,8 +247,16 @@ export const useGamePage = (props) => {
     closeModal,
     selectedPlayer,
     setSelectedPlayer,
-    openSnackbar,
+    isOpenSnackbar,
     handleCloseSnackbar,
     snackbarMessage,
+    isOpenVotingModal,
+    closeVotingModal,
+    timer,
+    openVotingModalAll,
+    votedPlayer,
+    setVotedPlayer,
+    votePlayer,
+    isVoted,
   };
 };

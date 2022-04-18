@@ -45,6 +45,8 @@ const NewUserPage = ({ updateStoreRoom }) => {
         nickname: res.data.user.nickname,
         cards: [],
         specialConditionCards: [],
+        isKickedOut: false,
+        votes: 0,
       })
     );
   };

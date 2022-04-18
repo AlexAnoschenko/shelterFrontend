@@ -9,6 +9,7 @@ import ShelterInfo from './components/ShelterInfo/ShelterInfo';
 import UsersLoader from '../../components/UsersLoader/UsersLoader';
 import { useGamePage } from './hooks';
 import CustomizedSnackbars from '../../components/Snackbar/Snackbar';
+import VotingModal from './components/VotingModal/VotingModal';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -49,9 +50,17 @@ const GamePage = (props) => {
     closeModal,
     selectedPlayer,
     setSelectedPlayer,
-    openSnackbar,
+    isOpenSnackbar,
     handleCloseSnackbar,
     snackbarMessage,
+    isOpenVotingModal,
+    closeVotingModal,
+    timer,
+    openVotingModalAll,
+    votedPlayer,
+    setVotedPlayer,
+    votePlayer,
+    isVoted,
   } = useGamePage(props);
 
   return (
@@ -61,6 +70,17 @@ const GamePage = (props) => {
         handleClose={closeModal}
         exitGame={exitGame}
       />
+
+      <VotingModal
+        isOpen={isOpenVotingModal}
+        timer={timer}
+        users={room?.users}
+        votedPlayer={votedPlayer}
+        setVotedPlayer={setVotedPlayer}
+        votePlayer={votePlayer}
+        isVoted={isVoted}
+      />
+
       <div className={classes.main}>
         {user && room && room.shelter && room.apocalypse ? (
           <>
@@ -109,6 +129,15 @@ const GamePage = (props) => {
               setCurrentPlayer={setCurrentPlayer}
               room={room}
             />
+
+            {user.role === 'admin' && (
+              <CustomButton
+                textButton='Voting'
+                width='100px'
+                onClickHandler={openVotingModalAll}
+              />
+            )}
+
             <ShelterInfo room={room} />
             <ApocalypseInfo room={room} />
             <CustomButton
@@ -123,7 +152,7 @@ const GamePage = (props) => {
       </div>
 
       <CustomizedSnackbars
-        open={openSnackbar}
+        open={isOpenSnackbar}
         handleClose={handleCloseSnackbar}
         message={snackbarMessage}
       />

@@ -2,13 +2,10 @@ import axios from 'axios';
 import appConfig from '../config';
 
 export const createRoom = async ({ nickname, numberOfPlayers }) => {
-  const res = await axios.post(
-    `${appConfig.API_URL}/rooms/createRoom`,
-    {
-      nickname,
-      numberOfPlayers,
-    }
-  );
+  const res = await axios.post(`${appConfig.API_URL}/rooms/createRoom`, {
+    nickname,
+    numberOfPlayers,
+  });
 
   localStorage.setItem('roomId', res.data.roomId);
   localStorage.setItem('userId', res.data.user.userId);
@@ -30,17 +27,24 @@ export const getRoom = async (id) => {
 };
 
 export const createUser = async ({ nickname, id }) => {
-  const res = await axios.post(
-    `${appConfig.API_URL}/rooms/createUser`,
-    {
-      nickname,
-      id,
-    }
-  );
+  const res = await axios.post(`${appConfig.API_URL}/rooms/createUser`, {
+    nickname,
+    id,
+  });
 
   localStorage.setItem('roomId', res.data.roomId);
   localStorage.setItem('userId', res.data.user.userId);
   localStorage.setItem('nickname', res.data.user.nickname);
+
+  return res;
+};
+
+export const voteUser = async (user) => {
+  const res = await axios.post(`${appConfig.API_URL}/rooms/voteUser`, {
+    id: localStorage.getItem('roomId'),
+    nickname: user.nickname,
+    userId: user.userId,
+  });
 
   return res;
 };

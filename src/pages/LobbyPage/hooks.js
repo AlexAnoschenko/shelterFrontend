@@ -25,6 +25,8 @@ export const useLobbyPage = (props) => {
           nickname: localStorage.getItem('nickname'),
           cards: [],
           specialConditionCards: [],
+          isKickedOut: false,
+          votes: 0,
         },
       })
     );
