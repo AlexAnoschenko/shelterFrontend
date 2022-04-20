@@ -29,6 +29,13 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     gap: 10,
   },
+  kickedOut: {
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '26px',
+  },
   exitButton: {
     marginBottom: '10px',
   },
@@ -61,101 +68,115 @@ const GamePage = (props) => {
     setVotedPlayer,
     votePlayer,
     isVoted,
+    result,
   } = useGamePage(props);
 
   return (
     <>
-      <Modal
-        isOpenModal={isOpenModal}
-        handleClose={closeModal}
-        exitGame={exitGame}
-      />
+      {user?.isKickedOut && (
+        <div className={classes.kickedOut}>You kicked out!</div>
+      )}
+      {!user?.isKickedOut && room?.isEndGame && (
+        <div className={classes.kickedOut}>You win!</div>
+      )}
+      {!room?.isEndGame && (
+        <>
+          <Modal
+            isOpenModal={isOpenModal}
+            handleClose={closeModal}
+            exitGame={exitGame}
+          />
 
-      <VotingModal
-        isOpen={isOpenVotingModal}
-        timer={timer}
-        users={room?.users}
-        votedPlayer={votedPlayer}
-        setVotedPlayer={setVotedPlayer}
-        votePlayer={votePlayer}
-        isVoted={isVoted}
-      />
+          <VotingModal
+            isOpen={isOpenVotingModal}
+            handleClose={closeVotingModal}
+            timer={timer}
+            users={room?.users}
+            votedPlayer={votedPlayer}
+            setVotedPlayer={setVotedPlayer}
+            votePlayer={votePlayer}
+            isVoted={isVoted}
+            result={result}
+            player={user}
+          />
 
-      <div className={classes.main}>
-        {user && room && room.shelter && room.apocalypse ? (
-          <>
-            <div className={classes.label}>{currentPlayer}</div>
-            <div className={classes.cardsList}>
-              {room.users.map((usr) => {
-                if (usr.nickname === currentPlayer) {
-                  return usr.cards.map((card) => {
-                    return (
-                      <CardItem
-                        key={card.id}
-                        card={card}
-                        currentPlayer={currentPlayer}
-                        openCard={openCard}
-                      />
-                    );
-                  });
-                }
-                return null;
-              })}
-            </div>
-            <div className={classes.label}>Special Conditions</div>
-            <div className={classes.cardsList}>
-              {room.users.map((usr) => {
-                if (usr.nickname === currentPlayer) {
-                  return usr.specialConditionCards.map((card) => {
-                    return (
-                      <CardItem
-                        key={card.id}
-                        card={card}
-                        currentPlayer={currentPlayer}
-                        openCard={openSpecialCard}
-                        type={card.action}
-                        selectedPlayer={selectedPlayer}
-                        setSelectedPlayer={setSelectedPlayer}
-                        users={room.users}
-                      />
-                    );
-                  });
-                }
-                return null;
-              })}
-            </div>
-            <PlayerSwicher
-              currentPlayer={currentPlayer}
-              setCurrentPlayer={setCurrentPlayer}
-              room={room}
-            />
+          <div className={classes.main}>
+            {user && room && room.shelter && room.apocalypse ? (
+              <>
+                <div className={classes.label}>{currentPlayer}</div>
+                <div className={classes.cardsList}>
+                  {room.users.map((usr) => {
+                    if (usr.nickname === currentPlayer) {
+                      return usr.cards.map((card) => {
+                        return (
+                          <CardItem
+                            key={card.id}
+                            card={card}
+                            currentPlayer={currentPlayer}
+                            openCard={openCard}
+                          />
+                        );
+                      });
+                    }
+                    return null;
+                  })}
+                </div>
+                <div className={classes.label}>Special Conditions</div>
+                <div className={classes.cardsList}>
+                  {room.users.map((usr) => {
+                    if (usr.nickname === currentPlayer) {
+                      return usr.specialConditionCards.map((card) => {
+                        return (
+                          <CardItem
+                            key={card.id}
+                            card={card}
+                            currentPlayer={currentPlayer}
+                            openCard={openSpecialCard}
+                            type={card.action}
+                            selectedPlayer={selectedPlayer}
+                            setSelectedPlayer={setSelectedPlayer}
+                            users={room.users}
+                          />
+                        );
+                      });
+                    }
+                    return null;
+                  })}
+                </div>
+                <PlayerSwicher
+                  currentPlayer={currentPlayer}
+                  setCurrentPlayer={setCurrentPlayer}
+                  room={room}
+                />
 
-            {user.role === 'admin' && (
-              <CustomButton
-                textButton='Voting'
-                width='100px'
-                onClickHandler={openVotingModalAll}
-              />
+                {user.role === 'admin' && (
+                  <CustomButton
+                    textButton='Voting'
+                    width='100px'
+                    onClickHandler={openVotingModalAll}
+                  />
+                )}
+
+                <ShelterInfo room={room} />
+                <ApocalypseInfo room={room} />
+                <CustomButton
+                  className={classes.exitButton}
+                  textButton='Exit Game'
+                  onClickHandler={openModal}
+                />
+              </>
+            ) : (
+              <UsersLoader />
             )}
+          </div>
 
-            <ShelterInfo room={room} />
-            <ApocalypseInfo room={room} />
-            <CustomButton
-              className={classes.exitButton}
-              textButton='Exit Game'
-              onClickHandler={openModal}
-            />
-          </>
-        ) : (
-          <UsersLoader />
-        )}
-      </div>
-
-      <CustomizedSnackbars
-        open={isOpenSnackbar}
-        handleClose={handleCloseSnackbar}
-        message={snackbarMessage}
-      />
+          <CustomizedSnackbars
+            open={isOpenSnackbar}
+            handleClose={handleCloseSnackbar}
+            message={snackbarMessage}
+          />
+        </>
+      )}
     </>
   );
 };

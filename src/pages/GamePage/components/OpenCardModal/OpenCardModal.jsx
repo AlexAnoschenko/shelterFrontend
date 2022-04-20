@@ -94,7 +94,7 @@ const OpenCardModal = ({
           <div className={classes.subTitle}>Choose a player</div>
           <div className={classes.playersBlock}>
             {users?.map((user) => {
-              if (user.nickname !== nickname) {
+              if (user.nickname !== nickname && !user.isKickedOut) {
                 return (
                   <div
                     className={classes.player}

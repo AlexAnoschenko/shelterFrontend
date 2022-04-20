@@ -37,6 +37,11 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     color: '#faebd7',
   },
+  resultBlock: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '18px',
+  },
   buttonBlock: {
     display: 'flex',
     justifyContent: 'center',
@@ -52,6 +57,8 @@ const VotingModal = ({
   setVotedPlayer,
   votePlayer,
   isVoted,
+  result,
+  player,
 }) => {
   const classes = useStyles();
 
@@ -72,31 +79,43 @@ const VotingModal = ({
       <div id='alert-dialog-title' className={classes.title}>
         Voting
       </div>
-      <div className={classes.timer}>{timer}</div>
-      {isVoted ? (
+      {!result && <div className={classes.timer}>{timer}</div>}
+      {isVoted || result ? (
         <div className={classes.titleAfterVoting}>
-          You voted! Waiting for results
+          {!result ? (
+            <div>You voted! Waiting for results</div>
+          ) : (
+            <div className={classes.resultBlock}>
+              <div>{`${result} kicked out!`}</div>
+              <div className={classes.buttonBlock}>
+                <CustomButton textButton='Close' onClickHandler={handleClose} />
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <>
           <div className={classes.title}>Vote for the player</div>
           <div className={classes.playerBlock}>
             {users?.map((user) => {
-              return (
-                <div
-                  key={user.userId}
-                  className={classes.player}
-                  style={{
-                    backgroundColor:
-                      user.nickname === votedPlayer?.nickname
-                        ? '#019601'
-                        : '#686868',
-                  }}
-                  onClick={() => setVotedPlayer(user)}
-                >
-                  {user.nickname}
-                </div>
-              );
+              if (!user.isKickedOut && user.nickname !== player?.nickname)
+                return (
+                  <div
+                    key={user.userId}
+                    className={classes.player}
+                    style={{
+                      backgroundColor:
+                        user.nickname === votedPlayer?.nickname
+                          ? '#019601'
+                          : '#686868',
+                    }}
+                    onClick={() => setVotedPlayer(user)}
+                  >
+                    {user.nickname}
+                  </div>
+                );
+
+              return null;
             })}
           </div>
           <div className={classes.buttonBlock}>

@@ -17,18 +17,21 @@ export const useGamePage = (props) => {
   const [isOpenSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(null);
   const [isOpenVotingModal, setIsOpenVotingModal] = useState(false);
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(5);
   const [isActiveTimer, setIsActiveTimer] = useState(false);
   const [votedPlayer, setVotedPlayer] = useState(null);
   const [isVoted, setIsVoted] = useState(false);
+  const [result, setResult] = useState(null);
 
   const startTimer = () => {
     setIsActiveTimer(true);
   };
 
   const resetTimer = () => {
-    setTimer(10);
     setIsActiveTimer(false);
+    setTimeout(() => {
+      setTimer(5);
+    }, 500);
   };
 
   const handleOpenSnackbar = () => {
@@ -159,6 +162,10 @@ export const useGamePage = (props) => {
 
   const closeVotingModal = () => {
     setIsOpenVotingModal(false);
+    setTimeout(() => {
+      setResult(null);
+    }, 500);
+    window.location.reload();
   };
 
   const addRoomStore = async (res) => {
@@ -179,6 +186,8 @@ export const useGamePage = (props) => {
 
     if (timer === 0) {
       clearInterval(interval);
+      getVotingResult();
+      resetTimer();
     }
 
     return () => clearInterval(interval);
@@ -198,7 +207,6 @@ export const useGamePage = (props) => {
     }
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -223,9 +231,24 @@ export const useGamePage = (props) => {
 
         if (JSON.parse(event.data).room?.users) {
           addRoomStore(JSON.parse(event.data).room);
+
+          JSON.parse(event.data).room.users.map((user) => {
+            if (user.nickname === localStorage.getItem('nickname')) {
+              addUserStore(user);
+            }
+            return null;
+          });
           if (JSON.parse(event.data).method === 'snackbar') {
             setSnackbarMessage(JSON.parse(event.data).snackbar);
             handleOpenSnackbar();
+          }
+
+          if (JSON.parse(event.data).method === 'getVotingResult') {
+            setResult(JSON.parse(event.data).kickedOutPlayer);
+          }
+
+          if (JSON.parse(event.data).method === 'endGame') {
+            setResult(JSON.parse(event.data).kickedOutPlayer);
           }
         }
       };
@@ -258,5 +281,6 @@ export const useGamePage = (props) => {
     setVotedPlayer,
     votePlayer,
     isVoted,
+    result,
   };
 };
