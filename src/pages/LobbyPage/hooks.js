@@ -27,6 +27,7 @@ export const useLobbyPage = (props) => {
           specialConditionCards: [],
           isKickedOut: false,
           votes: 0,
+          isVoted: false,
         },
       })
     );

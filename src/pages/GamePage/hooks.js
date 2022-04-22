@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { getRoom, voteUser } from '../../api/room';
+import { getRoom } from '../../api/room';
 import { addRoomAction, addUserAction } from '../../store/actions/roomActions';
 
 export const useGamePage = (props) => {
@@ -17,22 +17,10 @@ export const useGamePage = (props) => {
   const [isOpenSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(null);
   const [isOpenVotingModal, setIsOpenVotingModal] = useState(false);
-  const [timer, setTimer] = useState(5);
-  const [isActiveTimer, setIsActiveTimer] = useState(false);
   const [votedPlayer, setVotedPlayer] = useState(null);
-  const [isVoted, setIsVoted] = useState(false);
   const [result, setResult] = useState(null);
 
-  const startTimer = () => {
-    setIsActiveTimer(true);
-  };
-
-  const resetTimer = () => {
-    setIsActiveTimer(false);
-    setTimeout(() => {
-      setTimer(5);
-    }, 500);
-  };
+  // ----------------- SNACKBAR -------------------------------------------
 
   const handleOpenSnackbar = () => {
     setOpenSnackbar(true);
@@ -46,11 +34,17 @@ export const useGamePage = (props) => {
     setOpenSnackbar(false);
   };
 
-  const votePlayer = async (user) => {
-    const res = await voteUser(user);
-    if (res.data.isVoted) {
-      setIsVoted(true);
-    }
+  // ----------------- VOTING -------------------------------------------
+
+  const openVotingModal = () => {
+    setIsOpenVotingModal(true);
+  };
+
+  const closeVotingModal = () => {
+    setIsOpenVotingModal(false);
+    setTimeout(() => {
+      setResult(null);
+    }, 500);
   };
 
   const openVotingModalAll = () => {
@@ -58,6 +52,17 @@ export const useGamePage = (props) => {
       JSON.stringify({
         method: 'openVotingModalAll',
         id: room._id,
+      })
+    );
+  };
+
+  const votePlayerHandler = (selectedUser, player) => {
+    socket.send(
+      JSON.stringify({
+        method: 'votePlayer',
+        id: room._id,
+        selectedUser: selectedUser,
+        player: player,
       })
     );
   };
@@ -70,6 +75,8 @@ export const useGamePage = (props) => {
       })
     );
   };
+
+  // ----------------- OPEN CARDS -------------------------------------------
 
   const openCard = (card) => {
     socket.send(
@@ -141,11 +148,15 @@ export const useGamePage = (props) => {
     }
   };
 
+  // ----------------- EXIT GAME -------------------------------------------
+
   const exitGame = () => {
     localStorage.clear();
     router.push('/');
     window.location.reload();
   };
+
+  // ----------------- MODAL -------------------------------------------
 
   const openModal = () => {
     setIsOpenModal(true);
@@ -155,18 +166,7 @@ export const useGamePage = (props) => {
     setIsOpenModal(false);
   };
 
-  const openVotingModal = () => {
-    startTimer();
-    setIsOpenVotingModal(true);
-  };
-
-  const closeVotingModal = () => {
-    setIsOpenVotingModal(false);
-    setTimeout(() => {
-      setResult(null);
-    }, 500);
-    window.location.reload();
-  };
+  // ----------------- DISPATCHES -------------------------------------------
 
   const addRoomStore = async (res) => {
     dispatch(addRoomAction(res));
@@ -176,22 +176,7 @@ export const useGamePage = (props) => {
     dispatch(addUserAction(res));
   };
 
-  useEffect(() => {
-    let interval = null;
-    if (isActiveTimer && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((timer) => timer - 1);
-      }, 1000);
-    }
-
-    if (timer === 0) {
-      clearInterval(interval);
-      getVotingResult();
-      resetTimer();
-    }
-
-    return () => clearInterval(interval);
-  }, [isActiveTimer, timer]);
+  // ----------------- USE EFFECTS -------------------------------------------
 
   useEffect(() => {
     async function fetchData() {
@@ -238,6 +223,7 @@ export const useGamePage = (props) => {
             }
             return null;
           });
+
           if (JSON.parse(event.data).method === 'snackbar') {
             setSnackbarMessage(JSON.parse(event.data).snackbar);
             handleOpenSnackbar();
@@ -275,12 +261,11 @@ export const useGamePage = (props) => {
     snackbarMessage,
     isOpenVotingModal,
     closeVotingModal,
-    timer,
     openVotingModalAll,
     votedPlayer,
     setVotedPlayer,
-    votePlayer,
-    isVoted,
+    votePlayerHandler,
+    getVotingResult,
     result,
   };
 };

@@ -26,7 +26,6 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: '10px',
-    marginBottom: '18px',
   },
   player: {
     fontSize: '18px',
@@ -42,25 +41,51 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     gap: '18px',
   },
+  waitingResult: {
+    color: '#faebd7',
+    textAlign: 'center',
+    fontSize: '24px',
+    marginTop: '18px',
+  },
   buttonBlock: {
     display: 'flex',
     justifyContent: 'center',
+    marginTop: '18px',
   },
 }));
 
 const VotingModal = ({
   isOpen,
-  timer,
   handleClose,
   users,
   votedPlayer,
   setVotedPlayer,
-  votePlayer,
-  isVoted,
+  votePlayerHandler,
+  getVotingResult,
   result,
   player,
 }) => {
   const classes = useStyles();
+
+  const avaliablePlayersCounter = () => {
+    const avaliablePlayers = [];
+    users?.forEach((user) => {
+      if (!user.isKickedOut) {
+        avaliablePlayers.push(user);
+      }
+    });
+    return avaliablePlayers.length;
+  };
+
+  const votedPlayersCounter = () => {
+    const votedPlayers = [];
+    users?.map((user) => {
+      if (user.isVoted) {
+        votedPlayers.push(user);
+      }
+    });
+    return votedPlayers.length;
+  };
 
   return (
     <Dialog
@@ -79,14 +104,33 @@ const VotingModal = ({
       <div id='alert-dialog-title' className={classes.title}>
         Voting
       </div>
-      {!result && <div className={classes.timer}>{timer}</div>}
-      {isVoted || result ? (
-        <div className={classes.titleAfterVoting}>
+      {player?.isVoted ? (
+        <div>
           {!result ? (
-            <div>You voted! Waiting for results</div>
+            <>
+              <div className={classes.titleAfterVoting}>
+                You voted! Waiting for results
+              </div>
+              <div className={classes.waitingResult}>
+                {`${votedPlayersCounter()} from ${avaliablePlayersCounter()} voted`}
+              </div>
+              {player?.role === 'admin' && (
+                <div className={classes.buttonBlock}>
+                  <CustomButton
+                    textButton='SHOW RESULT'
+                    onClickHandler={() => getVotingResult()}
+                    disabled={
+                      votedPlayersCounter() !== avaliablePlayersCounter()
+                    }
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <div className={classes.resultBlock}>
-              <div>{`${result} kicked out!`}</div>
+              <div
+                className={classes.titleAfterVoting}
+              >{`${result} kicked out!`}</div>
               <div className={classes.buttonBlock}>
                 <CustomButton textButton='Close' onClickHandler={handleClose} />
               </div>
@@ -121,7 +165,8 @@ const VotingModal = ({
           <div className={classes.buttonBlock}>
             <CustomButton
               textButton='VOTE'
-              onClickHandler={() => votePlayer(votedPlayer)}
+              onClickHandler={() => votePlayerHandler(votedPlayer, player)}
+              disabled={!votedPlayer}
             />
           </div>
         </>

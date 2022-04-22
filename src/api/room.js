@@ -38,13 +38,3 @@ export const createUser = async ({ nickname, id }) => {
 
   return res;
 };
-
-export const voteUser = async (user) => {
-  const res = await axios.post(`${appConfig.API_URL}/rooms/voteUser`, {
-    id: localStorage.getItem('roomId'),
-    nickname: user.nickname,
-    userId: user.userId,
-  });
-
-  return res;
-};

@@ -62,12 +62,11 @@ const GamePage = (props) => {
     snackbarMessage,
     isOpenVotingModal,
     closeVotingModal,
-    timer,
     openVotingModalAll,
     votedPlayer,
     setVotedPlayer,
-    votePlayer,
-    isVoted,
+    votePlayerHandler,
+    getVotingResult,
     result,
   } = useGamePage(props);
 
@@ -79,7 +78,7 @@ const GamePage = (props) => {
       {!user?.isKickedOut && room?.isEndGame && (
         <div className={classes.kickedOut}>You win!</div>
       )}
-      {!room?.isEndGame && (
+      {!room?.isEndGame && !user?.isKickedOut && (
         <>
           <Modal
             isOpenModal={isOpenModal}
@@ -90,12 +89,11 @@ const GamePage = (props) => {
           <VotingModal
             isOpen={isOpenVotingModal}
             handleClose={closeVotingModal}
-            timer={timer}
             users={room?.users}
             votedPlayer={votedPlayer}
             setVotedPlayer={setVotedPlayer}
-            votePlayer={votePlayer}
-            isVoted={isVoted}
+            votePlayerHandler={votePlayerHandler}
+            getVotingResult={getVotingResult}
             result={result}
             player={user}
           />

@@ -47,6 +47,7 @@ const NewUserPage = ({ updateStoreRoom }) => {
         specialConditionCards: [],
         isKickedOut: false,
         votes: 0,
+        isVoted: false,
       })
     );
   };
