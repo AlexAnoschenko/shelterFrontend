@@ -6,9 +6,11 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
+    padding: '4px',
   },
   label: {
-    fontSize: '28px',
+    fontSize: '24px',
+    color: '#a6bd9a',
     marginBottom: '18px',
   },
   infoBlock: {
