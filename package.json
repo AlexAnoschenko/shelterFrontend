@@ -24,6 +24,7 @@
     "react-use-websocket": "^3.0.0",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
+    "serve": "^13.0.2",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
@@ -31,7 +32,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
     "extends": [
