@@ -19,8 +19,25 @@ const useStyles = makeStyles(() => ({
     gap: 18,
     padding: 10,
   },
+  block: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: '10px',
+    backgroundColor: '#1111116c',
+    padding: '4px 4px 8px 4px',
+    borderRadius: '8px',
+    width: '100%',
+  },
   label: {
     fontSize: '28px',
+    color: '#61be5e',
+    textAlign: 'center',
+  },
+  labelSpecial: {
+    fontSize: '24px',
+    color: '#a6bd9a',
+    textAlign: 'center',
   },
   cardsList: {
     display: 'flex',
@@ -35,9 +52,6 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '26px',
-  },
-  exitButton: {
-    marginBottom: '10px',
   },
 }));
 
@@ -103,66 +117,83 @@ const GamePage = (props) => {
           <div className={classes.main}>
             {user && room && room.shelter && room.apocalypse ? (
               <>
-                <div className={classes.label}>{currentPlayer}</div>
-                <div className={classes.cardsList}>
-                  {room.users.map((usr) => {
-                    if (usr.nickname === currentPlayer) {
-                      return usr.cards.map((card) => {
-                        return (
-                          <CardItem
-                            key={card.id}
-                            card={card}
-                            currentPlayer={currentPlayer}
-                            openCard={openCard}
-                          />
-                        );
-                      });
-                    }
-                    return null;
-                  })}
+                <div className={classes.block}>
+                  <div className={classes.label}>{currentPlayer}</div>
+                  <div className={classes.cardsList}>
+                    {room.users.map((usr) => {
+                      if (usr.nickname === currentPlayer) {
+                        return usr.cards.map((card) => {
+                          return (
+                            <CardItem
+                              key={card.id}
+                              card={card}
+                              currentPlayer={currentPlayer}
+                              openCard={openCard}
+                            />
+                          );
+                        });
+                      }
+                      return null;
+                    })}
+                  </div>
                 </div>
-                <div className={classes.label}>Special Conditions</div>
-                <div className={classes.cardsList}>
-                  {room?.users.map((usr) => {
-                    if (usr.nickname === currentPlayer) {
-                      return usr.specialConditionCards.map((card) => {
-                        return (
-                          <CardItem
-                            key={card.id}
-                            card={card}
-                            currentPlayer={currentPlayer}
-                            openCard={openSpecialCard}
-                            type={card.action}
-                            selectedPlayer={selectedPlayer}
-                            setSelectedPlayer={setSelectedPlayer}
-                            users={room.users}
-                          />
-                        );
-                      });
-                    }
-                    return null;
-                  })}
+
+                <div className={classes.block}>
+                  <div className={classes.labelSpecial}>Special Conditions</div>
+                  <div className={classes.cardsList}>
+                    {room?.users.map((usr) => {
+                      if (usr.nickname === currentPlayer) {
+                        return usr.specialConditionCards.map((card) => {
+                          return (
+                            <CardItem
+                              key={card.id}
+                              card={card}
+                              currentPlayer={currentPlayer}
+                              openCard={openSpecialCard}
+                              type={card.action}
+                              selectedPlayer={selectedPlayer}
+                              setSelectedPlayer={setSelectedPlayer}
+                              users={room.users}
+                            />
+                          );
+                        });
+                      }
+                      return null;
+                    })}
+                  </div>
                 </div>
-                <PlayerSwicher
-                  currentPlayer={currentPlayer}
-                  setCurrentPlayer={setCurrentPlayer}
-                  room={room}
-                />
+
+                <div className={classes.block}>
+                  <PlayerSwicher
+                    currentPlayer={currentPlayer}
+                    setCurrentPlayer={setCurrentPlayer}
+                    room={room}
+                  />
+                </div>
 
                 {user.role === 'admin' && (
                   <CustomButton
                     textButton='Voting'
                     width='100px'
+                    height='40px'
+                    fontSize='18px'
                     onClickHandler={openVotingModalAll}
                   />
                 )}
 
-                <ShelterInfo room={room} />
-                <ApocalypseInfo room={room} />
+                <div className={classes.block}>
+                  <ShelterInfo room={room} />
+                </div>
+
+                <div className={classes.block}>
+                  <ApocalypseInfo room={room} />
+                </div>
+
                 <CustomButton
-                  className={classes.exitButton}
                   textButton='Exit Game'
                   onClickHandler={openModal}
+                  height='40px'
+                  width='200px'
                 />
               </>
             ) : (

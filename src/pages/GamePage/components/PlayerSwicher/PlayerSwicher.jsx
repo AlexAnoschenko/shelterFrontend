@@ -7,7 +7,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   label: {
-    fontSize: '28px',
+    fontSize: '24px',
+    color: '#a6bd9a',
     marginBottom: '18px',
   },
   playerList: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles(() => ({
   },
   playerItem: {
     width: '90px',
-    minHeight: '50px',
+    minHeight: '30px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
