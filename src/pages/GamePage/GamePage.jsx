@@ -123,7 +123,7 @@ const GamePage = (props) => {
                 </div>
                 <div className={classes.label}>Special Conditions</div>
                 <div className={classes.cardsList}>
-                  {room.users.map((usr) => {
+                  {room?.users.map((usr) => {
                     if (usr.nickname === currentPlayer) {
                       return usr.specialConditionCards.map((card) => {
                         return (
