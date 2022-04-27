@@ -45,6 +45,7 @@ export const useGamePage = (props) => {
     setTimeout(() => {
       setResult(null);
     }, 500);
+    window.location.reload();
   };
 
   const openVotingModalAll = () => {
@@ -156,7 +157,7 @@ export const useGamePage = (props) => {
     window.location.reload();
   };
 
-  // ----------------- MODAL -------------------------------------------
+  // ----------------- MODAL -----------------------------------------------
 
   const openModal = () => {
     setIsOpenModal(true);
@@ -235,6 +236,10 @@ export const useGamePage = (props) => {
 
           if (JSON.parse(event.data).method === 'endGame') {
             setResult(JSON.parse(event.data).kickedOutPlayer);
+          }
+
+          if (JSON.parse(event.data).method === 'draw') {
+            setVotedPlayer(null);
           }
         }
       };

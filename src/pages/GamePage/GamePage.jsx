@@ -96,6 +96,8 @@ const GamePage = (props) => {
             getVotingResult={getVotingResult}
             result={result}
             player={user}
+            isDraw={room?.isDraw}
+            drawPlayers={room?.drawPlayers}
           />
 
           <div className={classes.main}>

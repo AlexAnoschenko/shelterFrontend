@@ -64,6 +64,8 @@ const VotingModal = ({
   getVotingResult,
   result,
   player,
+  drawPlayers,
+  isDraw,
 }) => {
   const classes = useStyles();
 
@@ -106,7 +108,7 @@ const VotingModal = ({
       </div>
       {player?.isVoted ? (
         <div>
-          {!result ? (
+          {!result && (
             <>
               <div className={classes.titleAfterVoting}>
                 You voted! Waiting for results
@@ -126,7 +128,9 @@ const VotingModal = ({
                 </div>
               )}
             </>
-          ) : (
+          )}
+
+          {result && (
             <div className={classes.resultBlock}>
               <div
                 className={classes.titleAfterVoting}
@@ -139,28 +143,57 @@ const VotingModal = ({
         </div>
       ) : (
         <>
+          {isDraw ? <div className={classes.title}>DRAW!</div> : null}
+
           <div className={classes.title}>Vote for the player</div>
           <div className={classes.playerBlock}>
-            {users?.map((user) => {
-              if (!user.isKickedOut && user.nickname !== player?.nickname)
-                return (
-                  <div
-                    key={user.userId}
-                    className={classes.player}
-                    style={{
-                      backgroundColor:
-                        user.nickname === votedPlayer?.nickname
-                          ? '#019601'
-                          : '#686868',
-                    }}
-                    onClick={() => setVotedPlayer(user)}
-                  >
-                    {user.nickname}
-                  </div>
-                );
+            {isDraw ? (
+              <>
+                {drawPlayers?.map((user) => {
+                  if (!user.isKickedOut && user.nickname !== player?.nickname)
+                    return (
+                      <div
+                        key={user.userId}
+                        className={classes.player}
+                        style={{
+                          backgroundColor:
+                            user.nickname === votedPlayer?.nickname
+                              ? '#019601'
+                              : '#686868',
+                        }}
+                        onClick={() => setVotedPlayer(user)}
+                      >
+                        {user.nickname}
+                      </div>
+                    );
 
-              return null;
-            })}
+                  return null;
+                })}
+              </>
+            ) : (
+              <>
+                {users?.map((user) => {
+                  if (!user.isKickedOut && user.nickname !== player?.nickname)
+                    return (
+                      <div
+                        key={user.userId}
+                        className={classes.player}
+                        style={{
+                          backgroundColor:
+                            user.nickname === votedPlayer?.nickname
+                              ? '#019601'
+                              : '#686868',
+                        }}
+                        onClick={() => setVotedPlayer(user)}
+                      >
+                        {user.nickname}
+                      </div>
+                    );
+
+                  return null;
+                })}
+              </>
+            )}
           </div>
           <div className={classes.buttonBlock}>
             <CustomButton
