@@ -14,8 +14,13 @@ export const useGamePage = (props) => {
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isOpenSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(null);
+  const [isOpenVotingModal, setIsOpenVotingModal] = useState(false);
+  const [votedPlayer, setVotedPlayer] = useState(null);
+  const [result, setResult] = useState(null);
+
+  // ----------------- SNACKBAR -------------------------------------------
 
   const handleOpenSnackbar = () => {
     setOpenSnackbar(true);
@@ -28,6 +33,51 @@ export const useGamePage = (props) => {
 
     setOpenSnackbar(false);
   };
+
+  // ----------------- VOTING -------------------------------------------
+
+  const openVotingModal = () => {
+    setIsOpenVotingModal(true);
+  };
+
+  const closeVotingModal = () => {
+    setIsOpenVotingModal(false);
+    setTimeout(() => {
+      setResult(null);
+    }, 500);
+    window.location.reload();
+  };
+
+  const openVotingModalAll = () => {
+    socket.send(
+      JSON.stringify({
+        method: 'openVotingModalAll',
+        id: room._id,
+      })
+    );
+  };
+
+  const votePlayerHandler = (selectedUser, player) => {
+    socket.send(
+      JSON.stringify({
+        method: 'votePlayer',
+        id: room._id,
+        selectedUser: selectedUser,
+        player: player,
+      })
+    );
+  };
+
+  const getVotingResult = () => {
+    socket.send(
+      JSON.stringify({
+        method: 'getVotingResult',
+        id: room._id,
+      })
+    );
+  };
+
+  // ----------------- OPEN CARDS -------------------------------------------
 
   const openCard = (card) => {
     socket.send(
@@ -99,11 +149,15 @@ export const useGamePage = (props) => {
     }
   };
 
+  // ----------------- EXIT GAME -------------------------------------------
+
   const exitGame = () => {
     localStorage.clear();
     router.push('/');
     window.location.reload();
   };
+
+  // ----------------- MODAL -----------------------------------------------
 
   const openModal = () => {
     setIsOpenModal(true);
@@ -113,6 +167,8 @@ export const useGamePage = (props) => {
     setIsOpenModal(false);
   };
 
+  // ----------------- DISPATCHES -------------------------------------------
+
   const addRoomStore = async (res) => {
     dispatch(addRoomAction(res));
   };
@@ -120,6 +176,8 @@ export const useGamePage = (props) => {
   const addUserStore = async (res) => {
     dispatch(addUserAction(res));
   };
+
+  // ----------------- USE EFFECTS -------------------------------------------
 
   useEffect(() => {
     async function fetchData() {
@@ -135,7 +193,6 @@ export const useGamePage = (props) => {
     }
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,11 +211,35 @@ export const useGamePage = (props) => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
+        if (JSON.parse(event.data).method === 'openVotingModalAll') {
+          openVotingModal();
+        }
+
         if (JSON.parse(event.data).room?.users) {
           addRoomStore(JSON.parse(event.data).room);
+
+          JSON.parse(event.data).room.users.map((user) => {
+            if (user.nickname === localStorage.getItem('nickname')) {
+              addUserStore(user);
+            }
+            return null;
+          });
+
           if (JSON.parse(event.data).method === 'snackbar') {
             setSnackbarMessage(JSON.parse(event.data).snackbar);
             handleOpenSnackbar();
+          }
+
+          if (JSON.parse(event.data).method === 'getVotingResult') {
+            setResult(JSON.parse(event.data).kickedOutPlayer);
+          }
+
+          if (JSON.parse(event.data).method === 'endGame') {
+            setResult(JSON.parse(event.data).kickedOutPlayer);
+          }
+
+          if (JSON.parse(event.data).method === 'draw') {
+            setVotedPlayer(null);
           }
         }
       };
@@ -180,8 +261,16 @@ export const useGamePage = (props) => {
     closeModal,
     selectedPlayer,
     setSelectedPlayer,
-    openSnackbar,
+    isOpenSnackbar,
     handleCloseSnackbar,
     snackbarMessage,
+    isOpenVotingModal,
+    closeVotingModal,
+    openVotingModalAll,
+    votedPlayer,
+    setVotedPlayer,
+    votePlayerHandler,
+    getVotingResult,
+    result,
   };
 };

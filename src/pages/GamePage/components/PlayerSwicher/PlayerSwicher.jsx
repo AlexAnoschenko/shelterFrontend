@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: '10px',
+    justifyContent: 'center',
   },
   playerItem: {
     width: '90px',
@@ -48,12 +49,17 @@ const PlayerSwicher = ({ currentPlayer, setCurrentPlayer, room }) => {
             key={user.userId}
             className={classes.playerItem}
             style={{
-              backgroundColor:
-                user.nickname === currentPlayer ? '#019601' : '#3b3b3b',
+              backgroundColor: user.isKickedOut
+                ? '#1a1919'
+                : user.nickname === currentPlayer
+                ? '#019601'
+                : '#3b3b3b',
+              pointerEvents: user.isKickedOut ? 'none' : 'auto',
+              color: user.isKickedOut ? '#757575' : '#faebd7',
             }}
             onClick={() => swichPlayer(user.nickname)}
           >
-            {user.nickname}
+            {`${user.nickname} ${user.isKickedOut ? '(Kicked)' : ''}`}
           </div>
         ))}
       </div>
