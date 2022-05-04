@@ -13,9 +13,9 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     textAlign: 'center',
     gap: 18,
-    backgroundColor: (props) => (props.isVisible ? '#016b2a' : '#293d2e'),
+    backgroundColor: (props) => (props.isVisible ? '#329c6c' : '#2e2e31'),
     padding: '10px',
-    border: '2px solid black',
+    border: '2px solid #131313',
     borderRadius: '10px',
     pointerEvents: (props) =>
       props.currentPlayer !== localStorage.getItem('nickname') ||
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     color: '#cace06',
   },
   cardDescription: {
-    color: '#1ee6d5',
+    color: '#faebd7',
   },
 }));
 

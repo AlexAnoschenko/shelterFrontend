@@ -2,6 +2,7 @@ import Dialog from '@mui/material/Dialog';
 
 import { makeStyles } from '@mui/styles';
 import CustomButton from '../../../../components/Button/Button';
+import Loader from '../../../../components/Loader/Loader';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -10,16 +11,19 @@ const useStyles = makeStyles(() => ({
     fontSize: '24px',
     marginBottom: '18px',
   },
+  titleDraw: {
+    color: '#a6bd9a',
+    textAlign: 'center',
+    fontSize: '30px',
+    marginBottom: '18px',
+  },
   titleAfterVoting: {
     color: '#faebd7',
     textAlign: 'center',
     fontSize: '24px',
   },
-  timer: {
-    color: '#faebd7',
+  loaderWrapper: {
     textAlign: 'center',
-    fontSize: '24px',
-    marginBottom: '18px',
   },
   playerBlock: {
     display: 'flex',
@@ -45,7 +49,6 @@ const useStyles = makeStyles(() => ({
     color: '#faebd7',
     textAlign: 'center',
     fontSize: '24px',
-    marginTop: '18px',
   },
   buttonBlock: {
     display: 'flex',
@@ -96,7 +99,7 @@ const VotingModal = ({
       aria-describedby='alert-dialog-description'
       PaperProps={{
         style: {
-          backgroundColor: '#252525',
+          background: 'rgb(22, 22, 28)',
           borderRadius: '10px',
           width: '100%',
           padding: '10px',
@@ -104,7 +107,7 @@ const VotingModal = ({
       }}
     >
       <div id='alert-dialog-title' className={classes.title}>
-        Voting
+        Voting...
       </div>
       {player?.isVoted ? (
         <div>
@@ -113,13 +116,20 @@ const VotingModal = ({
               <div className={classes.titleAfterVoting}>
                 You voted! Waiting for results
               </div>
+
+              <div className={classes.loaderWrapper}>
+                <Loader />
+              </div>
+
               <div className={classes.waitingResult}>
                 {`${votedPlayersCounter()} from ${avaliablePlayersCounter()} voted`}
               </div>
               {player?.role === 'admin' && (
                 <div className={classes.buttonBlock}>
                   <CustomButton
-                    textButton='SHOW RESULT'
+                    height='40px'
+                    width='200px'
+                    textButton='Show result'
                     onClickHandler={() => getVotingResult()}
                     disabled={
                       votedPlayersCounter() !== avaliablePlayersCounter()
@@ -143,9 +153,10 @@ const VotingModal = ({
         </div>
       ) : (
         <>
-          {isDraw ? <div className={classes.title}>DRAW!</div> : null}
+          {isDraw ? <div className={classes.titleDraw}>DRAW!</div> : null}
 
           <div className={classes.title}>Vote for the player</div>
+
           <div className={classes.playerBlock}>
             {isDraw ? (
               <>
@@ -181,7 +192,7 @@ const VotingModal = ({
                         style={{
                           backgroundColor:
                             user.nickname === votedPlayer?.nickname
-                              ? '#019601'
+                              ? '#329c6c'
                               : '#686868',
                         }}
                         onClick={() => setVotedPlayer(user)}
@@ -197,7 +208,9 @@ const VotingModal = ({
           </div>
           <div className={classes.buttonBlock}>
             <CustomButton
-              textButton='VOTE'
+              height='40px'
+              width='150px'
+              textButton='Vote!'
               onClickHandler={() => votePlayerHandler(votedPlayer, player)}
               disabled={!votedPlayer}
             />
