@@ -53,8 +53,8 @@ const PlayerSwicher = ({ currentPlayer, setCurrentPlayer, room }) => {
               backgroundColor: user.isKickedOut
                 ? '#1a1919'
                 : user.nickname === currentPlayer
-                ? '#019601'
-                : '#3b3b3b',
+                ? '#329c6c'
+                : '#2e2e31',
               pointerEvents: user.isKickedOut ? 'none' : 'auto',
               color: user.isKickedOut ? '#757575' : '#faebd7',
             }}

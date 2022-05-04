@@ -35,7 +35,7 @@ const Modal = ({ isOpenModal, handleClose, exitGame }) => {
       aria-describedby='alert-dialog-description'
       PaperProps={{
         style: {
-          backgroundColor: '#252525',
+          background: 'rgb(22, 22, 28)',
           borderRadius: '10px',
         },
       }}
@@ -45,13 +45,15 @@ const Modal = ({ isOpenModal, handleClose, exitGame }) => {
       </DialogTitle>
       <div className={classes.buttonsBlock}>
         <CustomButton
-          width={140}
+          height='40px'
+          width='100px'
           onClick={handleClose}
           textButton={'Yes'}
           onClickHandler={() => exitGame()}
         />
         <CustomButton
-          width={140}
+          height='40px'
+          width='100px'
           onClick={handleClose}
           textButton={'No'}
           onClickHandler={handleClose}
