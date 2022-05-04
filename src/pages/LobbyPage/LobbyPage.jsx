@@ -1,5 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { TelegramShareButton, TelegramIcon } from 'react-share';
+import { QRCodeSVG } from 'qrcode.react';
 
 import CustomButton from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
@@ -19,16 +20,20 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     fontSize: '1.6rem',
-    marginBottom: '20px',
     textAlign: 'center',
+    color: '#a6bd9a',
   },
   subTitle: {
     fontSize: '1.6rem',
-    color: '#c4ee0b',
+    color: '#a6bd9a',
+  },
+  qrWrapper: {
+    border: '4px solid #e0d01c',
+    animation: `$tgAnim 2000ms infinite`,
+    borderRadius: '4px',
   },
   tgIcon: {
-    border: '2px solid white',
-    borderColor: '#e0d01c',
+    border: '2px solid #e0d01c',
     borderRadius: '50%',
     animation: `$tgAnim 2000ms infinite`,
   },
@@ -42,6 +47,11 @@ const useStyles = makeStyles(() => ({
     '100%': {
       borderColor: '#e0d01c',
     },
+  },
+  titlePlayers: {
+    fontSize: '1.6rem',
+    marginBottom: '20px',
+    textAlign: 'center',
   },
   users: {
     display: 'flex',
@@ -85,22 +95,37 @@ const LobbyPage = (props) => {
 
         {nickname && isUserExists ? (
           <>
-            <div className={classes.title}>Share Link</div>
-            <div className={classes.subTitle}>Click!</div>
+            <div className={classes.title}>Use QR-code</div>
+
+            <div className={classes.qrWrapper}>
+              <QRCodeSVG
+                size={190}
+                bgColor='#329c6c'
+                value={`${
+                  window.location.origin
+                }/lobbyPage/${getRoomIdFromLS()}/`}
+              />
+            </div>
+
+            <div className={classes.subTitle}>Or share link!</div>
             <TelegramShareButton
               url={`${window.location.origin}/lobbyPage/${getRoomIdFromLS()}/`}
             >
               <TelegramIcon
-                size={256}
+                size={168}
                 round={true}
                 className={classes.tgIcon}
               />
             </TelegramShareButton>
-            <Loader />
+
+            <div>
+              <Loader />
+            </div>
+
             {room ? (
               <div>
                 <div
-                  className={classes.title}
+                  className={classes.titlePlayers}
                 >{`${room.users.length} from ${room.numberOfPlayers} joined`}</div>
                 <div className={classes.users}>
                   {room.users.map((user) => (
@@ -120,7 +145,12 @@ const LobbyPage = (props) => {
             ) : (
               <UsersLoader />
             )}
-            <CustomButton textButton='Exit Game' onClickHandler={openModal} />
+            <CustomButton
+              height='40px'
+              width='200px'
+              textButton='Exit Game'
+              onClickHandler={openModal}
+            />
           </>
         ) : (
           <NewUserPage updateStoreRoom={updateStoreRoom} />
