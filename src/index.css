@@ -5,13 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(44, 45, 44);
-  background: linear-gradient(
-    180deg,
-    rgba(44, 45, 44, 1) 28%,
-    rgba(65, 64, 64, 1) 100%
-  );
-  color: antiquewhite;
+  background: rgb(22, 22, 28);
+  color: #fbfdfd;
 }
 
 code {

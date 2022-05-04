@@ -6,7 +6,7 @@ const useStyles = ({ width, height, fontSize, disabled }) => ({
     height: height,
     fontSize: fontSize,
     textTransform: 'none !important',
-    backgroundColor: disabled ? '#2e2e2e !important' : '#5f5f5f !important',
+    backgroundColor: disabled ? '#2e2e2e !important' : '#329c6c !important',
     color: 'antiquewhite !important',
 
     '&:active': {

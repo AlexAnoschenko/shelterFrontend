@@ -17,7 +17,7 @@ const CustomizedSnackbars = ({
       <Alert
         onClose={handleClose}
         severity={type}
-        sx={{ width: '100%', fontSize: '16px' }}
+        sx={{ width: '100%', fontSize: '16px', background: '#329c6c' }}
       >
         {message}
       </Alert>

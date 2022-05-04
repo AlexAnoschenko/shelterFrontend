@@ -12,11 +12,17 @@ import CustomizedSnackbars from '../../components/Snackbar/Snackbar';
 import VotingModal from './components/VotingModal/VotingModal';
 
 const useStyles = makeStyles(() => ({
+  container: {
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   main: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 18,
+    gap: 10,
     padding: 10,
   },
   block: {
@@ -24,14 +30,14 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     justifyContent: 'center',
     gap: '10px',
-    backgroundColor: '#1111116c',
+    backgroundColor: 'rgb(32, 33, 37)',
     padding: '4px 4px 8px 4px',
     borderRadius: '8px',
     width: '100%',
   },
   label: {
     fontSize: '28px',
-    color: '#61be5e',
+    color: '#a6bd9a',
     textAlign: 'center',
   },
   labelSpecial: {
@@ -171,16 +177,6 @@ const GamePage = (props) => {
                   />
                 </div>
 
-                {user.role === 'admin' && (
-                  <CustomButton
-                    textButton='Voting'
-                    width='100px'
-                    height='40px'
-                    fontSize='18px'
-                    onClickHandler={openVotingModalAll}
-                  />
-                )}
-
                 <div className={classes.block}>
                   <ShelterInfo room={room} />
                 </div>
@@ -189,15 +185,28 @@ const GamePage = (props) => {
                   <ApocalypseInfo room={room} />
                 </div>
 
+                {user.role === 'admin' && (
+                  <CustomButton
+                    textButton='Voting'
+                    height='40px'
+                    width='200px'
+                    fontSize='18px'
+                    onClickHandler={openVotingModalAll}
+                  />
+                )}
+
                 <CustomButton
                   textButton='Exit Game'
                   onClickHandler={openModal}
                   height='40px'
                   width='200px'
+                  fontSize='18px'
                 />
               </>
             ) : (
-              <UsersLoader />
+              <div className={classes.container}>
+                <UsersLoader />
+              </div>
             )}
           </div>
 

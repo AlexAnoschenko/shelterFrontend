@@ -74,7 +74,7 @@ const OpenCardModal = ({
       aria-describedby='alert-dialog-description'
       PaperProps={{
         style: {
-          backgroundColor: '#252525',
+          background: 'rgb(22, 22, 28)',
           borderRadius: '10px',
         },
       }}
@@ -118,7 +118,8 @@ const OpenCardModal = ({
       )}
       <div className={classes.buttonsBlock}>
         <Button
-          width={140}
+          height='40px'
+          width='100px'
           onClick={handleClose}
           textButton={'Yes'}
           onClickHandler={() => openCardHandle(card)}
@@ -128,7 +129,8 @@ const OpenCardModal = ({
           }
         />
         <Button
-          width={140}
+          height='40px'
+          width='100px'
           onClick={handleClose}
           textButton={'No'}
           onClickHandler={handleClose}
