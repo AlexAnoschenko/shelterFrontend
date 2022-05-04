@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import useSound from 'use-sound';
+import voting from '../../sounds/voting.mp3';
 
 import { getRoom } from '../../api/room';
 import { addRoomAction, addUserAction } from '../../store/actions/roomActions';
@@ -19,6 +21,8 @@ export const useGamePage = (props) => {
   const [isOpenVotingModal, setIsOpenVotingModal] = useState(false);
   const [votedPlayer, setVotedPlayer] = useState(null);
   const [result, setResult] = useState(null);
+
+  const [play] = useSound(voting);
 
   // ----------------- SNACKBAR -------------------------------------------
 
@@ -213,6 +217,7 @@ export const useGamePage = (props) => {
       socket.onmessage = (event) => {
         if (JSON.parse(event.data).method === 'openVotingModalAll') {
           openVotingModal();
+          play();
         }
 
         if (JSON.parse(event.data).room?.users) {
