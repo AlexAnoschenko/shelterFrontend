@@ -217,7 +217,6 @@ export const useGamePage = (props) => {
       socket.onmessage = (event) => {
         if (JSON.parse(event.data).method === 'openVotingModalAll') {
           openVotingModal();
-          play();
         }
 
         if (JSON.parse(event.data).room?.users) {
@@ -252,6 +251,12 @@ export const useGamePage = (props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
+
+  useEffect(() => {
+    if (isOpenVotingModal) {
+      play();
+    }
+  }, [isOpenVotingModal]);
 
   return {
     user,
